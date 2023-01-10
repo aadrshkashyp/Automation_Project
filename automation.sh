@@ -98,3 +98,5 @@ else
     echo "Error copying tar archive to S3 bucket"
     exit 1
 fi
+
+#first task done
