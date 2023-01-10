@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # define variables
-myname="<aadarsh>"
-s3_bucket="<upgrad-aadarsh>"
+myname="aadarsh"
+s3_bucket="upgrad-aadarsh"
 
 # update package details and package list
 sudo apt update -y
@@ -72,16 +72,6 @@ else
     exit 1
 fi
 
-# copy tar archive to s3 bucket
-echo "Copying tar archive to S3 bucket..."
-aws s3 cp /tmp/${myname}-httpd-logs-${timestamp}.tar s3://${s3_bucket}/${myname}-httpd-logs-${timestamp}.tar
-if [ $? -eq 0 ]; then
-   echo "Tar archive copied to S3 bucket successfully: s3://${s3_bucket}/${myname}-httpd-logs-${timestamp}.tar"
-else
-    echo "Error copying tar archive to S3 bucket"
-    exit 1
-fi
-
 # check if AWS CLI is installed
 if command -v aws > /dev/null; then
     echo "AWS CLI is installed"
@@ -96,3 +86,17 @@ else
         exit 1
     fi
 fi
+
+#above code will install aw cli for our next prcoess for copying tar archive to s3 bucket
+
+# copy tar archive to s3 bucket
+echo "Copying tar archive to S3 bucket..."
+aws s3 cp /tmp/${myname}-httpd-logs-${timestamp}.tar s3://${s3_bucket}/${myname}-httpd-logs-${timestamp}.tar
+if [ $? -eq 0 ]; then
+   echo "Tar archive copied to S3 bucket successfully: s3://${s3_bucket}/${myname}-httpd-logs-${timestamp}.tar"
+else
+    echo "Error copying tar archive to S3 bucket"
+    exit 1
+fi
+
+#first task done
