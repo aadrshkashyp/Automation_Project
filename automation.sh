@@ -100,3 +100,32 @@ else
 fi
 
 #first task done
+
+# check for inventory.html file in /var/www/html/ directory
+if [ ! -f "/var/www/html/inventory.html" ]; then
+    # create inventory.html file if not found
+    echo "Creating inventory.html file..."
+    printf "Log Type\tTime Created\tType\tSize\n" | sudo tee /var/www/html/inventory.html
+    if [ $? -eq 0 ]; then
+        echo "Inventory.html file created successfully"
+    else
+        echo "Error creating inventory.html file"
+        exit 1
+    fi
+fi
+
+# append new entry to inventory.html file
+echo "Appending new entry to inventory.html file..."
+printf "httpd-logs\t%s\ttar\t%s\n" "${timestamp}" "$(du -h /tmp/${myname}-httpd-logs-${timestamp}.tar | awk '{print $1}')" | sudo tee -a /var/www/html/inventory.html
+if [ $? -eq 0 ]; then
+    echo "New entry appended to inventory.html file successfully"
+else
+    echo "Error appending new entry to inventory.html file"
+    exit 1
+fi
+
+# create a cron job file for the root user
+sudo crontab -u root -e
+
+# add the following line at the end of the file to run the script every min
+* * * * * /root/Automation_Project/automation.sh
